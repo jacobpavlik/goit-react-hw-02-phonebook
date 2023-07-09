@@ -11,7 +11,7 @@ class ContactForm extends Component {
   idNanoid = nanoid();
   state = {
     name: '',
-    // id: '',
+   number: '',
   };
 
   handleChange = e => {
@@ -21,7 +21,7 @@ class ContactForm extends Component {
       [name]: value,
       // id,
     }));
-    console.log(e.target.value);
+    console.log("handleChange",e.target.value);
   };
 
   handleSubmit = e => {
@@ -45,6 +45,17 @@ class ContactForm extends Component {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
         />
+        <label htmlFor={this.idNanoid}>Number</label>
+        <input
+          onChange={this.handleChange}
+          id={this.idNanoid}
+          value={this.state.number}
+  type="tel"
+  name="number"
+//  pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+  title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+  required
+/>
         <button type="submit">Add contact</button>
       </form>
     );
@@ -65,8 +76,8 @@ class ContactList extends Component {
     return (
       <div>
         <ul>
-          {this.props.contacts.map(({ name }, index) => (
-            <li key={index}>{name}</li>
+          {this.props.contacts.map(({ name, number }, index) => (
+            <li key={index}>{name}: {number}</li>
           ))}
         </ul>
       </div>
@@ -78,8 +89,8 @@ export class App extends Component {
   state = {
     contacts: [],
     name: '',
+    number:''
   };
-
   addContact = newContact => {
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
