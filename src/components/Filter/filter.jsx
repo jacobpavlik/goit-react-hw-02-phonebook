@@ -6,7 +6,6 @@ export class Filter extends Component {
     filter: '',
   };
   render() {
-    // const { state } = this.props;
     return (
       <div>
         <label>
@@ -18,9 +17,11 @@ export class Filter extends Component {
             title="Filter contacts"
             value={this.props.filter}
           />
-          {/* {console.log('input-this.props.filter', this.state.filter)} */}
         </label>
       </div>
     );
   }
 }
+Filter.propTypes = {
+  filter: PropTypes.string,
+};
