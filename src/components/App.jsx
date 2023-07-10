@@ -80,7 +80,7 @@ class ContactList extends Component {
   render() {
     return (
       <div>
-        <ul>
+        {/* <ul>
           {this.props.contacts.map(({ name, number }, index) => (
             <li key={index}>
               {name}: {number}
@@ -91,7 +91,7 @@ class ContactList extends Component {
               </span>
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
     );
   }
@@ -137,13 +137,20 @@ class Filter extends Component {
           />
           {console.log(this.state.filter)}
         </label>
-        {/* <div>
-          {this.state.value
-            .filter(contacts => this.state.name)
-            .map(filteredContacts => (
-              <li>{filteredContacts.name}</li>
+        <div>
+          <ul>
+            {this.props.contacts.map(({ name, number }, index) => (
+              <li key={index}>
+                {name}: {number}
+                <span>
+                  <button onClick={() => this.props.deleteContact(index)}>
+                    Delete
+                  </button>
+                </span>
+              </li>
             ))}
-        </div> */}
+          </ul>
+        </div>
       </div>
     );
   }
@@ -183,7 +190,10 @@ export class App extends Component {
         <h1>Phonebook</h1>
         <ContactForm addContact={this.addContact} />
         <h2>Contacts </h2>
-        <Filter />
+        <Filter
+          contacts={this.state.contacts}
+          deleteContact={this.deleteContact}
+        />
         <ContactList
           contacts={this.state.contacts}
           deleteContact={this.deleteContact}
