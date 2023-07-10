@@ -10,7 +10,7 @@
   width: 250px;
 }
 .formLabel {
-  font-size: 20px;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 .formInput {
@@ -25,4 +25,10 @@
   max-width: 120px;
   background-color: rgba(0, 0, 255, 0.7);
   margin-top: 20px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: blue;
+    color: blanchedalmond;
+  }
 }
