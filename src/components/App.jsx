@@ -11,7 +11,7 @@ class ContactForm extends Component {
   idNanoid = nanoid();
   state = {
     name: '',
-   number: '',
+    number: '',
   };
 
   handleChange = e => {
@@ -21,14 +21,19 @@ class ContactForm extends Component {
       [name]: value,
       // id,
     }));
-    console.log("handleChange",e.target.value);
+    console.log('handleChange', e.target.value);
   };
 
   handleSubmit = e => {
     e.preventDefault();
     // alert(`Dane zostały wysłane ${JSON.stringify(this.state)}`);
-    this.props.addContact(this.state);
-    console.log(`Dane zostały wysłane ${JSON.stringify(this.state)}`);
+    if (e.target.value === this.state.name) {
+      alert(`${this.state.name} is already in contacts.`);
+      return;
+    } else {
+      this.props.addContact(this.state);
+      console.log(`Dane zostały wysłane ${JSON.stringify(this.state)}`);
+    }
   };
 
   render() {
@@ -50,12 +55,12 @@ class ContactForm extends Component {
           onChange={this.handleChange}
           id={this.idNanoid}
           value={this.state.number}
-  type="tel"
-  name="number"
-//  pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-  title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-  required
-/>
+          type="tel"
+          name="number"
+          //  pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+        />
         <button type="submit">Add contact</button>
       </form>
     );
@@ -77,7 +82,14 @@ class ContactList extends Component {
       <div>
         <ul>
           {this.props.contacts.map(({ name, number }, index) => (
-            <li key={index}>{name}: {number}</li>
+            <li key={index}>
+              {name}: {number}
+              <span>
+                <button onClick={() => this.props.deleteContact(index)}>
+                  Delete
+                </button>
+              </span>
+            </li>
           ))}
         </ul>
       </div>
@@ -86,35 +98,83 @@ class ContactList extends Component {
 }
 
 class Filter extends Component {
+  state = {
+    filter: '',
+  };
+  handleFilter = e => {
+    const { name, value } = e.target;
+    this.setState(prevState => ({ ...prevState, [name]: value }));
+    console.log('handleFilter', e.target.value);
+    // this.state.filter(name, console.log(name));
+  };
+
+  // const filtered = this.state.filter.filter((name) => {
+  //   return this.state.filter === name.target.value;
+  // this.setState(prevState => {
+  //   return { filter: e.target.value };
+  // });
+  // console.log('this.state.filter.value', this.state.filter.value);
+  // console.log('this.props.name', this.props.name);
+  // console.log('koniec');
+  // console.log(e.target.value);
+
+  // if (this.props.name === this.state.filter.value) {
+  //   console.log("this.props.name", this.props.name)
+  //   console.log("this.state.filter.value", this.state.filter.value)
+  // }} else {console.log("nie jest this.props.name", this.props.name, "this.state.filter.value", this.state.filter.value )
+
   render() {
     return (
       <div>
-        <label>Find contatcs by name
-
-        <input type='text' name='filter' title='Filter contacts' /> 
+        <label>
+          Find contacts by name
+          <input
+            onChange={this.handleFilter}
+            type="text"
+            name="filter"
+            title="Filter contacts"
+            value={this.state.filter}
+          />
+          {console.log(this.state.filter)}
         </label>
-</div>
-    )
+        {/* <div>
+          {this.state.value
+            .filter(contacts => this.state.name)
+            .map(filteredContacts => (
+              <li>{filteredContacts.name}</li>
+            ))}
+        </div> */}
+      </div>
+    );
   }
 }
-
 
 export class App extends Component {
   state = {
     contacts: [
-    {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
-    {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
-    {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},],
-    filter:'',
-    name: '',
-    number:''
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
+    // name: '',
+    // number: '',
   };
   addContact = newContact => {
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
     }));
     console.log('Dodajemy nasz kontakt', this.state.contacts);
+  };
+
+  deleteContact = index => {
+    console.log('Usuwanie kontaktu', index);
+    this.setState(prevState => {
+      const updateContacts = [...prevState.contacts];
+      updateContacts.splice(index, 1);
+      return { contacts: updateContacts };
+    });
   };
 
   render() {
@@ -124,7 +184,10 @@ export class App extends Component {
         <ContactForm addContact={this.addContact} />
         <h2>Contacts </h2>
         <Filter />
-        <ContactList contacts={this.state.contacts} />
+        <ContactList
+          contacts={this.state.contacts}
+          deleteContact={this.deleteContact}
+        />
       </div>
     );
   }
